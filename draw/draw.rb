@@ -1,11 +1,16 @@
 class Draw
-  attr_accessor :app, :color, :width, :chooser, :picker
+  attr_accessor :app, :color, :width, :chooser, :picker, :drawing
 
   def initialize app
     @app = app
     @color = "#000"
     @width = 3
     @chooser = nil
+    @drawing = false
+    setup
+  end
+
+  def setup
     set_background
     draw_picker
     draw_chooser
@@ -29,13 +34,13 @@ class Draw
     end
   end
 
+  def drawing?
+    @drawing
+  end
+
   def clear
     @app.clear
-    set_background
-    draw_picker
-    draw_chooser
-    draw_clear
-    observers
+    setup
   end
 
   def observers
@@ -44,8 +49,27 @@ class Draw
     end
 
     @picker.click do
-      @color = ask_color "Pick a color"
+      @color = @app.ask_color "Pick a color"
       draw_picker
+    end
+
+    @app.click do
+      @drawing = true
+    end
+    @app.release do
+      @drawing = false
+    end
+
+    x, y = nil, nil
+    @app.motion do |_x, _y|
+      if x and y and (x != _x or y != _y)
+        @app.append do
+          @app.stroke @color
+          @app.strokewidth @width
+          @app.line x, y, _x, _y if drawing?
+        end
+      end
+      x, y = _x, _y
     end
   end
 
@@ -59,24 +83,4 @@ Shoes.app do
     @draw = Draw.new self
   end
   start_draw
-
-  draw = false
-  click do
-    draw = true
-  end
-  release do
-    draw = false
-  end
-
-  x, y = nil, nil
-  motion do |_x, _y|
-    if x and y and (x != _x or y != _y)
-      append do
-        stroke @draw.color
-        strokewidth @draw.width
-        line x, y, _x, _y if draw
-      end
-    end
-    x, y = _x, _y
-  end
 end
