@@ -11,27 +11,23 @@ class Draw
   end
 
   def setup
-    set_background
-    draw_picker
-    draw_chooser
-    draw_clear
+    @app.background "#fff"
+    draw_app
     observers
+  end
+
+  def draw_app
+    draw_picker
+    @chooser = @app.list_box items: (1..10).step(2).to_a, margin_left: 40, margin_top: 10
+    @app.button "clear" do
+      clear
+    end
   end
 
   def draw_picker
     @app.fill @color
     @app.stroke @color
     @picker = @app.rect top: 10, left: 10, width: 20, height: 20
-  end
-
-  def draw_chooser
-    @chooser = @app.list_box items: (1..10).step(2).to_a, margin_left: 40, margin_top: 10
-  end
-
-  def draw_clear
-    @app.button "clear" do
-      clear
-    end
   end
 
   def drawing?
@@ -71,10 +67,6 @@ class Draw
       end
       x, y = _x, _y
     end
-  end
-
-  def set_background
-    @app.background "#fff"
   end
 end
 
