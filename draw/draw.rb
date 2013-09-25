@@ -44,14 +44,14 @@ class Draw
 
   def initialize app
     @app = app
-    @color = "#000"
-    @width = 3
-    @chooser = nil
     setup
   end
 
   def setup
     @app.background "#fff"
+    @color = "#000"
+    @width = 3
+    @chooser = nil
     draw_picker
     draw_chooser
     draw_clear
