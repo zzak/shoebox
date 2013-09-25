@@ -1,12 +1,44 @@
+module Motion
+  def motion(app)
+    x, y = nil, nil
+    app.motion do |_x, _y|
+      if x and y and (x != _x or y != _y)
+        yield x, y, _x, _y
+      end
+      x, y = _x, _y
+    end
+  end
+end
+
+module Drawing
+  attr_accessor :drawing
+
+  def drawing?
+    @drawing
+  end
+
+  def draw_observe(app)
+    app.click do
+      @drawing = true
+    end
+
+    app.release do
+      @drawing = false
+    end
+  end
+end
+
 class Draw
-  attr_accessor :app, :color, :width, :chooser, :picker, :drawing
+  include Motion
+  include Drawing
+
+  attr_accessor :app, :color, :width, :chooser, :picker
 
   def initialize app
     @app = app
     @color = "#000"
     @width = 3
     @chooser = nil
-    @drawing = false
     setup
   end
 
@@ -30,10 +62,6 @@ class Draw
     @picker = @app.rect top: 10, left: 10, width: 20, height: 20
   end
 
-  def drawing?
-    @drawing
-  end
-
   def clear
     @app.clear
     setup
@@ -49,30 +77,18 @@ class Draw
       draw_picker
     end
 
-    @app.click do
-      @drawing = true
-    end
-    @app.release do
-      @drawing = false
-    end
+    draw_observe(@app)
 
-    x, y = nil, nil
-    @app.motion do |_x, _y|
-      if x and y and (x != _x or y != _y)
-        @app.append do
-          @app.stroke @color
-          @app.strokewidth @width
-          @app.line x, y, _x, _y if drawing?
-        end
+    motion(@app) do |x,y,_x,_y|
+      @app.append do
+        @app.stroke @color
+        @app.strokewidth @width
+        @app.line x, y, _x, _y if drawing?
       end
-      x, y = _x, _y
     end
   end
 end
 
 Shoes.app do
-  def start_draw
-    @draw = Draw.new self
-  end
-  start_draw
+  Draw.new self
 end
