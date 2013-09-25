@@ -28,7 +28,15 @@ module Drawing
   end
 end
 
+module App
+  def clear
+    @app.clear
+    setup
+  end
+end
+
 class Draw
+  include App
   include Motion
   include Drawing
 
@@ -44,16 +52,14 @@ class Draw
 
   def setup
     @app.background "#fff"
-    draw_app
+    draw_picker
+    draw_chooser
+    draw_clear
     observers
   end
 
-  def draw_app
-    draw_picker
+  def draw_chooser
     @chooser = @app.list_box items: (1..10).step(2).to_a, margin_left: 40, margin_top: 10
-    @app.button "clear" do
-      clear
-    end
   end
 
   def draw_picker
@@ -62,9 +68,10 @@ class Draw
     @picker = @app.rect top: 10, left: 10, width: 20, height: 20
   end
 
-  def clear
-    @app.clear
-    setup
+  def draw_clear
+    @app.button "clear" do
+      clear
+    end
   end
 
   def observers
