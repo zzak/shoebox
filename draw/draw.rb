@@ -1,44 +1,6 @@
-module Motion
-  def motion(app)
-    x, y = nil, nil
-    app.motion do |_x, _y|
-      if x and y and (x != _x or y != _y)
-        yield x, y, _x, _y
-      end
-      x, y = _x, _y
-    end
-  end
-end
-
-module Drawing
-  attr_accessor :drawing
-
-  def drawing?
-    @drawing
-  end
-
-  def draw_observe(app)
-    app.click do
-      @drawing = true
-    end
-
-    app.release do
-      @drawing = false
-    end
-  end
-end
-
-module App
-  def clear
-    @app.clear
-    setup
-  end
-end
+require 'helpers/draw'
 
 class Draw
-  include App
-  include Motion
-  include Drawing
 
   attr_accessor :app, :color, :width, :chooser, :picker
 
