@@ -38,11 +38,11 @@ class Draw
 
     draw_observe(@app)
 
-    motion(@app) do |x,y,_x,_y|
+    motion(@app) do |*position|
       @app.append do
         @app.stroke @color
         @app.strokewidth @width
-        @app.line x, y, _x, _y if drawing?
+        @app.line *position if drawing?
       end
     end
   end
