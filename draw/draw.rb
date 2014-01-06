@@ -4,16 +4,8 @@ class Draw
 
   attr_accessor :app, :color, :width, :chooser, :picker
 
-  def initialize app
-    @app = app
-    setup
-  end
-
-  def setup
-    @app.background "#fff"
-    @color = "#000"
-    @width = 3
-    @chooser = nil
+  def run
+    setup_default_values
     draw_picker
     draw_chooser
     draw_clear
@@ -59,5 +51,5 @@ class Draw
 end
 
 Shoes.app do
-  Draw.new self
+  Draw.new(self).run
 end
