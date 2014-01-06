@@ -13,13 +13,13 @@ class Draw
   end
 
   def draw_chooser
-    @chooser = @app.list_box items: (1..10).step(2).to_a, margin_left: 40, margin_top: 10
+    @chooser = @app.list_box chooser_options(items: (1..10).step(2).to_a)
   end
 
   def draw_picker
     @app.fill @color
     @app.stroke @color
-    @picker = @app.rect top: 10, left: 10, width: 20, height: 20
+    @picker = @app.rect picker_options
   end
 
   def draw_clear
