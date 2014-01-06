@@ -1,6 +1,4 @@
 module Drawing
-  attr_accessor :drawing
-
   def drawing?
     @drawing
   end

@@ -2,8 +2,6 @@ require 'helpers/draw'
 
 class Draw
 
-  attr_accessor :app, :color, :width, :chooser, :picker
-
   def run
     setup_default_values
     draw_picker
